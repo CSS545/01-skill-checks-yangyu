@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/FeedBackScene.unity
     guid: 65a331cb50f062c4984c45413f6210b5
+  - enabled: 1
+    path: Assets/Scenes/02-CallJava.unity
+    guid: 48349acf80a8b1c43869014f63b99c9b
   m_configObjects: {}

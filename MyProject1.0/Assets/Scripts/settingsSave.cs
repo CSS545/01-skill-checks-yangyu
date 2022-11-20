@@ -26,4 +26,5 @@ public class settingsSave : MonoBehaviour
         int tutorialStatus = PlayerPrefs.GetInt("tutorial");
         return tutorialStatus == 0 ? true : false;
     }
+
 }

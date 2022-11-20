@@ -12,6 +12,8 @@ public class Player : MonoBehaviour
     public GameObject ememyPref;
     private Rigidbody2D rb;
     public int countTmp = 0;
+    public int coffeeCountTmp = 0;
+    public int creamCountTmp = 0;
     public AudioSource deathSFSource;
     public AudioClip deathClip;
 
@@ -69,7 +71,38 @@ public class Player : MonoBehaviour
 
             foodLimiter++;
             playerSpeed = playerSpeed + Mathf.Log(playerSpeed, logBase) / foodLimiter;
-            Debug.Log(Mathf.Log(playerSpeed, logBase) + "/"+ foodLimiter + " = " + Mathf.Log(playerSpeed, logBase) / foodLimiter);
+            Debug.Log(Mathf.Log(playerSpeed, logBase) + "/"+ foodLimiter + " = " + playerSpeed);
+
+        }
+        if (collision.gameObject.CompareTag("Double Edge"))
+        {
+            //Eat food
+            Destroy(collision.gameObject);
+            //Digest
+            spn.SpawnbyType(ememyPref);
+            spn.SpawnbyType(ememyPref);
+            //Record Food Count
+            coffeeCountTmp++;
+
+            foodLimiter++;
+            playerSpeed = playerSpeed + 2 * Mathf.Log(playerSpeed, logBase) / foodLimiter;
+            Debug.Log(Mathf.Log(playerSpeed, logBase) + "/" + foodLimiter + " = " + playerSpeed);
+
+        }
+        if (collision.gameObject.CompareTag("Poo Maker"))
+        {
+            //Eat food
+            Destroy(collision.gameObject);
+            //Digest
+            spn.SpawnbyType(ememyPref);
+            spn.SpawnbyType(ememyPref);
+            spn.SpawnbyType(ememyPref);
+            //Record Food Count
+            creamCountTmp++;
+
+            if (foodLimiter == 0) { foodLimiter = 1; }
+            playerSpeed = playerSpeed + Mathf.Log(playerSpeed, logBase) / foodLimiter;
+            Debug.Log(Mathf.Log(playerSpeed, logBase) + "/" + foodLimiter + " = " + playerSpeed);
 
         }
 

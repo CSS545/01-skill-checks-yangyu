@@ -12,8 +12,12 @@ using UnityEngine;
 */
 public class Spawner : MonoBehaviour
 {
+    public GameScreen gameScreen;
     public GameObject spawnPrefabPoo;
     public GameObject spawnPrefabApple;
+    public GameObject coffeePrefab;
+    public GameObject icecreamPrefab;
+
     public GameObject player;
     public Timer timer;
 
@@ -30,8 +34,11 @@ public class Spawner : MonoBehaviour
     void Start()
     {
         CircleRadius = Camera.main.orthographicSize *
-                                    Camera.main.aspect;
+                       Camera.main.aspect *
+                       2;
         PooNum = 1;
+
+        gameScreen.CurPooCount = PooNum;
     }
 
     // Update is called once per frame
@@ -55,7 +62,10 @@ public class Spawner : MonoBehaviour
         if (currrentAppSpawnTime > AppleSpawnTime)
         {
             SpawnbyType(spawnPrefabApple);
-            
+
+            SpawnbyType(coffeePrefab);
+            SpawnbyType(icecreamPrefab);
+
             currrentAppSpawnTime = 0;
         }
         
@@ -63,13 +73,22 @@ public class Spawner : MonoBehaviour
     }
 
     public void SpawnbyType(GameObject prefab) {
+        //if poo update data
         if (prefab == spawnPrefabPoo) {
             PooNum++;
-            PlayerPrefs.SetInt("CurrentPoo", PooNum);
+            gameScreen.CurPooCount = PooNum;
         }
-        Instantiate(prefab, 
-                    RandomCircle(transform.position, CircleRadius), 
-                    Quaternion.identity);
+        //if coffe or icecream, spawn farthur
+        if (prefab == coffeePrefab)
+        {
+            Instantiate(prefab,
+                        RandomCircle(transform.position, CircleRadius + 10),
+                        Quaternion.identity);
+        } else {
+            Instantiate(prefab,
+                        RandomCircle(transform.position, CircleRadius),
+                        Quaternion.identity);
+        }
 
     }
 

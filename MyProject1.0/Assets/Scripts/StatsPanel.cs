@@ -21,7 +21,7 @@ public class StatsPanel : MonoBehaviour
         
         Debug.Log("StatTotalDeath" + countTmp);
         LifeText.text = countTmp.ToString();
-        countTmp = PlayerPrefs.GetInt("highScore", 0);
+        countTmp = PlayerPrefs.GetInt("TotalPoo", 0);
         PooText.text = countTmp.ToString();
         countTmp = PlayerPrefs.GetInt("AppleEat", 0);
         AppleText.text = countTmp.ToString();

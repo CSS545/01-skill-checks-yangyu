@@ -12,6 +12,7 @@ public class DeathScreen : MonoBehaviour
     public Spawner spn;
     public GameObject BackGround;
     public GameObject DeathFace;
+    public GameScreen gameScreen;
 
     private int CurPoo;
     //control the contineous gameplays per fullscreen ad break
@@ -21,23 +22,37 @@ public class DeathScreen : MonoBehaviour
     public Color targetColor;
     public bool NIGHTCLUB;
     public Timer timer;
+    private int Scoretemp;
 
     private void Awake()
     {
-        CurPoo = 0;
         gameObject.SetActive(false);
-        NIGHTCLUB = false;
+
+        NIGHTCLUB = (PlayerPrefs.GetInt("NightClub") != 0);
+        Debug.Log("NightClub " + PlayerPrefs.GetInt("NightClub"));
+        //PlayerPrefs.SetInt("NightClub", (NIGHTCLUB ? 1 : 0));
     }
     // Called when ever enable as active
     private void OnEnable()
     {
         timer.TimerActive(false);
         DeathFace.SetActive(true);
-        CurPoo = PlayerPrefs.GetInt("CurrentPoo", 1);
-        poopReport.text = CurPoo.ToString();
-        PlayerPrefs.SetInt("CurrentPoo", 1);
-        Time.timeScale = 7;
         targetColor = new Color(0, 0, 0);
+        Time.timeScale = 7;
+
+        //get poo count, min = 1; update poo text and 
+        CurPoo = gameScreen.CurPooCount;
+        poopReport.text = CurPoo.ToString();
+
+        //update highscore and total poo
+        Scoretemp = PlayerPrefs.GetInt("highScore", 0);
+        if (CurPoo > Scoretemp)
+        {
+            PlayerPrefs.SetInt("highScore", CurPoo);
+        }
+        Scoretemp = PlayerPrefs.GetInt("TotalPoo", 0);
+        Scoretemp += CurPoo;
+        PlayerPrefs.SetInt("TotalPoo", Scoretemp);
 
         deathCounter++;
     }
@@ -65,7 +80,9 @@ public class DeathScreen : MonoBehaviour
         {
             // transition in progress
             // calculate interpolated color
-            BackGround.GetComponent<Renderer>().material.color = Color.Lerp(BackGround.GetComponent<Renderer>().material.color, targetColor, Time.deltaTime / timeLeft);
+            BackGround.GetComponent<Renderer>().material.color = 
+                Color.Lerp(BackGround.GetComponent<Renderer>().material.color,
+                targetColor, Time.deltaTime / timeLeft);
 
             // update the timer
             timeLeft -= Time.deltaTime;
@@ -74,7 +91,6 @@ public class DeathScreen : MonoBehaviour
     private void OnDisable()
     {
         timer.TimerActive(true);
-
         DeathFace.SetActive(false);
         Time.timeScale = 1;
     }
@@ -96,11 +112,6 @@ public class DeathScreen : MonoBehaviour
     private void checkAd() {
         
         
-
-        int HighScore = PlayerPrefs.GetInt("highScore", 0);
-        if (CurPoo > HighScore) {
-            PlayerPrefs.SetInt("highScore", CurPoo);
-        }
         if (deathCounter > MinGameBeforeAd)
         {
             adScreen.gameObject.SetActive(true);
